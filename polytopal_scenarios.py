@@ -140,14 +140,14 @@ if __name__ == "__main__":
     hyperplane_coeffs_array = np.array([[1,0,0], [-1,0,0], [0,1,0], [0,-1,0],[0,0,1], [0,0,-1]])
     P = Polytope(hyperplane_coeffs_array=hyperplane_coeffs_array, ambient_dimension=3)
     #Main parameter: up to which degree do we compute Fourier coefficients?
-    total_degree = 20
+    total_degree = 30
     #The next settings are used for povray
     numpartsY = 100
     numpartsX = 2*numpartsY
     povray = False
     povfilename = "smoothed_cube"
     #Change scenario to see other examples
-    scenario = "IBUnweighted"
+    scenario = "IBWeighted"
 
     assert scenario in ["Unweighted", "Weighted","IBUnweighted", "IBWeighted"]
     print(scenario)
@@ -255,7 +255,7 @@ if __name__ == "__main__":
     if scenario=="IBUnweighted":
         #Scenario: Intersection body of polytope P from Fourier approximation of its squared radial fn
         #Our target function is the square of the radial function
-        radial_fn_values = np.array([P.evaluate_radial_fn_raised_to_dim(unit_vector) for unit_vector in roots])
+        radial_fn_values = np.array([P.evaluate_radial_fn_raised_to_dim(unit_vector)/2 for unit_vector in roots])
         #Next we want to compute the harmonic expansion up to a given target degree
         normalization_coefficients_dict = compute_normalization_coefficients_dict(total_degree)
         spherical_harmonics_values_dict = compute_spherical_harmonic_values_at_point_array(roots, normalization_coefficients_dict, total_degree)
@@ -304,7 +304,7 @@ if __name__ == "__main__":
 
     if scenario == "IBWeighted":
         #Scenario: Weighted approximation of the squared radial function of the polytope
-        radial_fn_values = np.array([P.evaluate_radial_fn_raised_to_dim(unit_vector) for unit_vector in roots])
+        radial_fn_values = np.array([P.evaluate_radial_fn_raised_to_dim(unit_vector)/2 for unit_vector in roots])
 
         #Next we want to compute the harmonic expansion up to a given target degree
         normalization_coefficients_dict = compute_normalization_coefficients_dict(total_degree)
@@ -371,9 +371,3 @@ if __name__ == "__main__":
         add_plot_arbitrary_radial_func_3D(expansion_function_evaluator, ax=ax, numpoints = 2000, color ="blue")
         # plt.savefig("Fourier_RF_sm"+str(total_degree)+".png")
         plt.show()
-
-
-
-
-
-
